@@ -26,18 +26,20 @@ def get_raw_data(start_date, end_date, coin_id):
     request = requests.get(request_url)
     return request.json()
 
-# Parameter: timestamp = Unix timestamp as seconds,
-# Return: Date in DD.MM.YYYY-format
-def unix_to_date(timestamp):
-    date = datetime.utcfromtimestamp(timestamp)
-    formatted_date = date.strftime("%d.%m.%Y")
-    return formatted_date
-
 # Parameter: Unix timestamp as milliseconds
 # Return: Unix timestamp as seconds
 def timestamp_converter(milliseconds):
     seconds = milliseconds/1000.0
     return seconds
+
+# Parameter: timestamp = Unix timestamp as seconds,
+# Return: Date in DD.MM.YYYY-format
+def unix_to_date(timestamp, milliseconds=True):
+    if milliseconds:
+        timestamp = timestamp_converter(timestamp)
+    date = datetime.utcfromtimestamp(timestamp)
+    formatted_date = date.strftime("%d.%m.%Y")
+    return formatted_date
 
 # Parameter: List = [DD.MM.YYYY, DD.MM.YYYY], where [0] = startDay, [1] = endDay
 # Return: Number of days between given dates
@@ -47,7 +49,7 @@ def days_between(list):
     end_day, end_month, end_year = map(int, end_date.split('.'))
     delta = date(end_year, end_month, end_day) - \
         date(start_year, start_month, start_day)
-    return(delta.days)
+    return delta.days
 
 # Parameter: json = Raw data from 'getRawData'-function
 # Return: [] that have []'s as a values where [0] = day(Unix), [1] = price of bitcoin
@@ -58,7 +60,7 @@ def price_data(json):
     if days < 90:
         prices_at_midnight = prices[::24]
         return prices_at_midnight
-    return(prices)
+    return prices
 
 # Parameter: json = Raw data from 'getRawData'-function
 # Return: [] that have []'s as a values where [0] = day(Unix), [1] = 24h volume of bitcoin
@@ -69,7 +71,7 @@ def trading_data(json):
     if days < 90:
         volumes_at_midnight = volumes[::24]
         return volumes_at_midnight
-    return(volumes)
+    return volumes
 
 # Parameter: List of lists, where [0] = day, [1] = 24h volume
 # Return: day = Unix time stamp of the date of top volume, highest = top 24h vol
@@ -82,12 +84,8 @@ def highest_volume(trading_data):
             day = data[0]
     return day, top_volume
 
-# Parameter: tuple, [0] = day of the top volume in Unix timestamp, [1] = top volume
-def highest_volume_output(tuple):
-    day, top_volume = tuple
-    date = unix_to_date(timestamp_converter(day))
-    return(f'Highest volume between selected days were on {date}. Volume were {top_volume} euros.')
-
+# Parameter: Data from 'price_data'-function (json)
+# Return: Longest streak of days that coin has had lower price than day before.
 def bear_trend(price_data):
     bear_trend = 0
     previous = 0
@@ -101,14 +99,23 @@ def bear_trend(price_data):
         previous = data[1]
     length_of_trends.append(bear_trend)
     return max(length_of_trends)
-    
+
+# Parameter: Data from 'price_data'-function (json)
+# Return: List including dates and prices for optimal profit. [0] = buy date, price [1] = sell date, price
 def optimal_dates(price_data):
-    date = []
-    price = []
-    for data in price_data:
-        date.append(data[0])
-        price.append(data[1])
-    return {'dates': date, 'price': price}
+    max_diff = price_data[0][1] - price_data[0][1]
+    min_max = []
+    arr_size = len(price_data)
+
+    for i in range(0, arr_size):
+        for j in range(i+1, arr_size):
+            if(price_data[j][1] - price_data[i][1] > max_diff):
+                max_diff = price_data[j][1] - price_data[i][1]
+                min_max = [price_data[i], price_data[j]]
+    return min_max           
+
+
+
 
         
 
