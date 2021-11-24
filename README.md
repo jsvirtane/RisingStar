@@ -30,5 +30,9 @@ Bitcoin.check_optimal_dates()
 
 #Update range of days
 Bitcoin.update_range()
+```
+
+## Author
+© Jami Virtanen
 
 
