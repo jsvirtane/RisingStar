@@ -55,8 +55,8 @@ def days_between(list):
 # Return: [] that have []'s as a values where [0] = day(Unix), [1] = price of bitcoin
 def price_data(json):
     prices = json['prices']
-    days = days_between([unix_to_date(timestamp_converter(
-        prices[0][0])), unix_to_date(timestamp_converter(prices[-1][0]))])
+    days = days_between([unix_to_date(
+        prices[0][0]), unix_to_date(prices[-1][0])])
     if days < 90:
         prices_at_midnight = prices[::24]
         return prices_at_midnight
