@@ -53,6 +53,9 @@ def days_between(list):
 
 # Parameter: json = Raw data from 'getRawData'-function
 # Return: [] that have []'s as a values where [0] = day(Unix), [1] = price of bitcoin
+# Api returns data from every hour if date range is under 90 days. If its over 90, data is from once a day (midnight).
+# Function filters unnecessary data from data set under 90 days by taking every 24th data_cell (every 24h).
+# First one is by default closest to midnight, so the rest will be too.
 def price_data(json):
     prices = json['prices']
     days = days_between([unix_to_date(
@@ -64,6 +67,9 @@ def price_data(json):
 
 # Parameter: json = Raw data from 'getRawData'-function
 # Return: [] that have []'s as a values where [0] = day(Unix), [1] = 24h volume of bitcoin
+# Api returns data from every hour if date range is under 90 days. If its over 90, data is from once a day (midnight).
+# Function filters unnecessary data from data set under 90 days by taking every 24th data_cell (every 24h).
+# First one is by default closest to midnight, so the rest will be too.
 def trading_data(json):
     volumes = json['total_volumes']
     days = days_between([unix_to_date(timestamp_converter(
