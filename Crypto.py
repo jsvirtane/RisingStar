@@ -1,6 +1,5 @@
 from RisingStar import *
 
-
 class Crypto:
     # For now this is like this. Searching other cryptos than BTC, requires function to fetch right coin id from CG-API.
     coin_id = 'bitcoin'
