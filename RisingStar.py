@@ -8,7 +8,7 @@ def get_dates():
     end_date = input('Enter end date in DD.MM.YYYY format: ')
     return [start_date, end_date]
 
-# Parameter: date format = DD.MM.YYYY 
+# Parameter: date format = DD.MM.YYYY
 # Return: Unix timestamp midnight UTC-timezone
 def get_date_as_unix(date, is_startDate=True):
     day, month, year = map(int, date.split('.'))
@@ -29,7 +29,7 @@ def get_raw_data(start_date, end_date, coin_id):
 # Parameter: Unix timestamp as milliseconds
 # Return: Unix timestamp as seconds
 def timestamp_converter(milliseconds):
-    seconds = milliseconds/1000.0
+    seconds = milliseconds/1000
     return seconds
 
 # Parameter: timestamp = Unix timestamp as seconds,
@@ -72,8 +72,8 @@ def price_data(json):
 # First one is by default closest to midnight, so the rest will be too.
 def trading_data(json):
     volumes = json['total_volumes']
-    days = days_between([unix_to_date(timestamp_converter(
-        volumes[0][0])), unix_to_date(timestamp_converter(volumes[-1][0]))])
+    days = days_between([unix_to_date(
+        volumes[0][0]), unix_to_date(volumes[-1][0])])
     if days < 90:
         volumes_at_midnight = volumes[::24]
         return volumes_at_midnight
@@ -98,7 +98,7 @@ def bear_trend(price_data):
     length_of_trends = []
     for data in price_data:
         if data[1] < previous:
-            bear_trend = bear_trend +1
+            bear_trend = bear_trend + 1
         if data[1] > previous:
             length_of_trends.append(bear_trend)
             bear_trend = 0
@@ -118,10 +118,4 @@ def optimal_dates(price_data):
             if(price_data[j][1] - price_data[i][1] > max_diff):
                 max_diff = price_data[j][1] - price_data[i][1]
                 min_max = [price_data[i], price_data[j]]
-    return min_max           
-
-
-
-
-        
-
+    return min_max

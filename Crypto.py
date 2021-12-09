@@ -27,10 +27,10 @@ class Crypto:
     def top_volume_24h(self):
         date = unix_to_date(highest_volume(self.trading_data)[0])
         top_volume = highest_volume(self.trading_data)[1]
-        return f'Highest volume between selected days were on {date}. Volume were {top_volume} euros.'
+        return f"Highest volume between selected days were on {date}. Volume were {top_volume} euros."
 
     def longest_bear(self):
-        return f'Longest bearish trend in {self.start_date} - {self.end_date} was {bear_trend(self.price_data)} days'
+        return f"Longest bearish trend in {self.start_date} - {self.end_date} was {bear_trend(self.price_data)} days"
 
     # Check best day to buy and sell between selected days for optimal profits
     def check_optimal_dates(self):
@@ -39,4 +39,6 @@ class Crypto:
             return 'Price will only decrease on selected days. Dont buy!'
         self.buy_date = unix_to_date(self.optimal_dates[0][0])
         self.sell_date = unix_to_date(self.optimal_dates[1][0])
-        return f'Best day to buy is {self.buy_date}. Best day to sell is {self.sell_date}.'
+        return f"Best day to buy is {self.buy_date}. Best day to sell is {self.sell_date}."
+
+
